@@ -108,22 +108,6 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AdministratorAccess
 
-  RoleGithubActionsAdministrator:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action: sts:AssumeRoleWithWebIdentity
-            Principal:
-              Federated: !Ref OidcProviderGitHub
-            Condition:
-              StringLike:
-                token.actions.githubusercontent.com:sub: !Sub repo:${PrefixGitHubRepository}
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-
   BucketLambdaArtifact:
     Type: AWS::S3::Bucket
     Properties:
@@ -131,9 +115,6 @@ Resources:
         Rules:
           - ExpirationInDays: 7
             Status: Enabled
-
-  BucketTerraformStates:
-    Type: AWS::S3::Bucket
 
 Outputs:
   BucketNameLambdaArtifact:
@@ -147,9 +128,3 @@ Outputs:
 
   RoleArnCloudFormationDeploy:
     Value: !GetAtt RoleCloudFormationDeploy.Arn
-
-  RoleArnGithubActionsAdministrator:
-    Value: !GetAtt RoleGithubActionsAdministrator.Arn
-
-  BucketNameTerraformStates:
-    Value: !Ref BucketTerraformStates
